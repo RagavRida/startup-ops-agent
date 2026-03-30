@@ -102,7 +102,7 @@ async function chat(userMessage, activeSkill = null) {
     const response = await axios.post(
       'https://openrouter.ai/api/v1/chat/completions',
       {
-        model: 'anthropic/claude-4-sonnet-20250522',
+        model: 'openai/gpt-4o',
         messages: [
           { role: 'system', content: systemPrompt },
           ...conversationHistory
@@ -116,9 +116,22 @@ async function chat(userMessage, activeSkill = null) {
           'Content-Type': 'application/json',
           'HTTP-Referer': 'https://github.com/RagavRida/startup-ops-agent',
           'X-Title': 'Aria - DevMetrics Demo'
+        },
+        validateStatus: function (status) {
+          return status < 500; // Resolve only if status < 500
         }
       }
     );
+
+    if (response.status !== 200) {
+      console.error('API Error:', response.status, response.data);
+      process.exit(1);
+    }
+
+    if (!response.data.choices || response.data.choices.length === 0) {
+      console.error('No choices in response:', response.data);
+      process.exit(1);
+    }
 
     const reply = response.data.choices[0].message.content;
     conversationHistory.push({ role: 'assistant', content: reply });
@@ -129,6 +142,9 @@ async function chat(userMessage, activeSkill = null) {
     
   } catch (error) {
     console.error(`❌ Error: ${error.response?.data?.error?.message || error.message}`);
+    if (error.response?.data) {
+      console.error('Full error:', JSON.stringify(error.response.data, null, 2));
+    }
     process.exit(1);
   }
 }
