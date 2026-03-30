@@ -6,11 +6,9 @@
   "main": "demo.js",
   "scripts": {
     "demo": "node demo-all-skills.js",
-    "demo:real": "node real-use-case.js",
+    "demo:real": "OPENROUTER_API_KEY=${OPENROUTER_API_KEY} node real-use-case.js",
     "test": "node test.js",
-    "quick-test": "node simple-test.js",
-    "start": "node simple-test.js",
-    "validate": "node test.js"
+    "quick": "node simple-test.js"
   },
   "keywords": [
     "gitagent",
