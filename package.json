@@ -6,6 +6,7 @@
   "main": "demo.js",
   "scripts": {
     "demo": "node demo-all-skills.js",
+    "demo:real": "node real-use-case.js",
     "test": "node test.js",
     "quick-test": "node simple-test.js",
     "start": "node simple-test.js",
