@@ -1,0 +1,52 @@
+name: full-ops-cycle
+description: "End-to-end startup ops workflow — from first visitor message to confirmed meeting or graceful exit."
+version: 1.0.0
+
+inputs:
+  - name: visitor_message
+    type: string
+    required: true
+    description: The visitor's first message or trigger event
+
+  - name: visitor_context
+    type: object
+    required: false
+    description: Optional metadata (referral source, page they came from, known email)
+
+steps:
+  - id: qualify
+    action: "Qualify the lead using BANT-lite signals. Detect intent, role, and urgency."
+    skill: lead-qualify
+    outputs: [fit_score, use_case, next_action]
+
+  - id: route
+    action: "Route based on fit_score from the qualify step."
+    depends_on: [qualify]
+    conditions:
+      strong: meeting-book
+      medium: self-serve-or-soft-cta
+      weak: graceful-exit
+
+  - id: book
+    action: "Book a discovery call or demo with the qualified lead."
+    skill: meeting-book
+    depends_on: [qualify]
+    trigger_when: ${{ steps.qualify.outputs.fit_score == 'strong' }}
+    outputs: [meeting_request]
+
+  - id: onboard
+    action: "If the visitor is a new signup (not a raw lead), run the onboarding flow."
+    skill: user-onboard
+    trigger_when: ${{ visitor_context.is_new_signup == true }}
+    outputs: [activation_status]
+
+  - id: handle-objection
+    action: "If an objection is detected at any point in the conversation, handle it."
+    skill: objection-handle
+    trigger_when: ${{ objection_detected == true }}
+    outputs: [objection_resolved, escalate_to_human]
+
+  - id: escalate
+    action: "Notify the human founder with lead details and context."
+    trigger_when: ${{ steps.handle-objection.outputs.escalate_to_human == true OR steps.qualify.outputs.fit_score == 'enterprise' }}
+    outputs: [escalation_record]

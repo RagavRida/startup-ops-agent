@@ -1,0 +1,29 @@
+spec_version: "0.1.0"
+name: startup-ops-agent
+version: 1.0.0
+description: "An AI employee that qualifies leads, onboards users, handles objections, and books meetings — autonomously."
+author: Raghav Rida
+license: MIT
+
+model:
+  preferred: openrouter:anthropic/claude-sonnet-4
+  fallback:
+    - openrouter:anthropic/claude-3.5-sonnet
+    - openrouter:openai/gpt-4o
+  constraints:
+    temperature: 0.4
+    max_tokens: 1024
+
+skills:
+  - lead-qualify
+  - user-onboard
+  - meeting-book
+  - objection-handle
+
+tags:
+  - startup
+  - sales
+  - onboarding
+  - lead-qualification
+  - ops
+  - automation
