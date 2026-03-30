@@ -5,11 +5,11 @@
   "type": "module",
   "main": "demo.js",
   "scripts": {
-    "demo": "node demo.js",
+    "demo": "node demo-all-skills.js",
     "test": "node test.js",
-    "quick-test": "node quick-test.js",
-    "start": "gitclaw --dir .",
-    "validate": "npx @open-gitagent/gitagent validate"
+    "quick-test": "node simple-test.js",
+    "start": "node simple-test.js",
+    "validate": "node test.js"
   },
   "keywords": [
     "gitagent",
@@ -23,6 +23,7 @@
   "author": "Raghav Rida",
   "license": "MIT",
   "dependencies": {
+    "axios": "^1.14.0",
     "dotenv": "^17.3.1",
     "gitclaw": "^0.3.0"
   },
