@@ -17,6 +17,7 @@ import { config } from 'dotenv';
 config();
 
 const API_KEY = process.env.OPENROUTER_API_KEY;
+const MODEL = process.env.OPENROUTER_MODEL || 'anthropic/claude-opus-4';
 
 if (!API_KEY) {
   console.error("❌ OPENROUTER_API_KEY not found");
@@ -102,7 +103,7 @@ async function chat(userMessage, activeSkill = null) {
     const response = await axios.post(
       'https://openrouter.ai/api/v1/chat/completions',
       {
-        model: 'openai/gpt-4o',
+        model: MODEL,
         messages: [
           { role: 'system', content: systemPrompt },
           ...conversationHistory

@@ -11,6 +11,7 @@ import { config } from 'dotenv';
 config();
 
 const API_KEY = process.env.OPENROUTER_API_KEY;
+const MODEL = process.env.OPENROUTER_MODEL || 'anthropic/claude-opus-4';
 
 if (!API_KEY) {
   console.error("❌ OPENROUTER_API_KEY not found in .env file");
@@ -47,7 +48,7 @@ You are Aria. ${scenario}`;
     const response = await axios.post(
       'https://openrouter.ai/api/v1/chat/completions',
       {
-        model: 'anthropic/claude-4-sonnet-20250522',
+        model: MODEL,
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userMessage }
@@ -68,9 +69,11 @@ You are Aria. ${scenario}`;
     const reply = response.data.choices[0].message.content;
     console.log(reply);
     console.log(`\n✓ Tokens: ${response.data.usage?.total_tokens || 'N/A'}`);
+    return true;
     
   } catch (error) {
     console.error(`\n❌ Error: ${error.response?.data?.error?.message || error.message}`);
+    return false;
   }
 }
 
@@ -83,52 +86,64 @@ async function main() {
   console.log("  4. Meeting Booking\n");
   
   // Demo 1: Lead Qualification
-  await runDemo(
+  const results = [];
+
+  results.push(await runDemo(
     'lead-qualify',
     readFileSync('skills/lead-qualify/SKILL.md', 'utf8'),
     'A new visitor has just messaged you. Qualify them.',
     "Hey, we're a 10-person startup and we're drowning in inbound leads but have no one to qualify them. What exactly does this do?"
-  );
+  ));
   
   await new Promise(resolve => setTimeout(resolve, 2000));
   
   // Demo 2: User Onboarding
-  await runDemo(
+  results.push(await runDemo(
     'user-onboard',
     readFileSync('skills/user-onboard/SKILL.md', 'utf8'),
     'A new user just signed up. Guide them to activation.',
     "Hi! I just signed up. I'm Alex, a solo founder, and I came from a Twitter thread about AI agents. How do I get started?"
-  );
+  ));
   
   await new Promise(resolve => setTimeout(resolve, 2000));
   
   // Demo 3: Objection Handling
-  await runDemo(
+  results.push(await runDemo(
     'objection-handle',
     readFileSync('skills/objection-handle/SKILL.md', 'utf8'),
     'A lead has an objection. Handle it with empathy.',
     "This looks interesting but we already have Intercom for chat. Why would we need this?"
-  );
+  ));
   
   await new Promise(resolve => setTimeout(resolve, 2000));
   
   // Demo 4: Meeting Booking
-  await runDemo(
+  results.push(await runDemo(
     'meeting-book',
     readFileSync('skills/meeting-book/SKILL.md', 'utf8'),
     'A qualified lead wants to schedule a call. Book it.',
     "Yeah, I'd love to jump on a call. I'm free most afternoons this week, Pacific time."
-  );
+  ));
   
+  const successCount = results.filter(Boolean).length;
+  const failCount = results.length - successCount;
+
   console.log(`\n${'='.repeat(60)}`);
-  console.log("✅ All demos complete!");
+  console.log("Demo run complete");
   console.log(`${'='.repeat(60)}\n`);
-  console.log("What you just saw:");
-  console.log("  ✓ Lead qualification with BANT-lite signals");
-  console.log("  ✓ Personalized onboarding flow");
-  console.log("  ✓ Objection handling without pressure");
-  console.log("  ✓ Meeting coordination with context collection\n");
-  console.log("Aria is ready for your hackathon submission! 🎉\n");
+  console.log(`Successful scenarios: ${successCount}`);
+  console.log(`Failed scenarios: ${failCount}\n`);
+
+  if (failCount === 0) {
+    console.log("What you just saw:");
+    console.log("  ✓ Lead qualification with BANT-lite signals");
+    console.log("  ✓ Personalized onboarding flow");
+    console.log("  ✓ Objection handling without pressure");
+    console.log("  ✓ Meeting coordination with context collection\n");
+    console.log("Aria is ready for your hackathon submission! 🎉\n");
+  } else {
+    console.log("One or more scenarios failed. Check API key/model access before using this as a live demo.\n");
+  }
 }
 
 main();

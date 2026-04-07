@@ -1,0 +1,51 @@
+{
+  "company": {
+    "name": "SprintOps",
+    "founder": "Raghav Rida",
+    "calendar_link": "https://cal.com/sprintops/demo",
+    "timezone": "Asia/Kolkata"
+  },
+  "leads": [
+    {
+      "email": "alex@sprintleaf.ai",
+      "name": "Alex",
+      "company": "SprintLeaf AI",
+      "role": "Founder",
+      "employees": 24,
+      "fit_score": "strong",
+      "last_stage": "meeting-book",
+      "notes": "Inbound from Product Hunt, high urgency."
+    },
+    {
+      "email": "maria@devmetrics.io",
+      "name": "Maria",
+      "company": "DevMetrics",
+      "role": "Head of Growth",
+      "employees": 62,
+      "fit_score": "medium",
+      "last_stage": "lead-qualify",
+      "notes": "Needs onboarding automation proof."
+    },
+    {
+      "email": "raj@microforge.dev",
+      "name": "Raj",
+      "company": "MicroForge",
+      "role": "Solo Developer",
+      "employees": 3,
+      "fit_score": "weak",
+      "last_stage": "disqualified",
+      "notes": "Early exploration, no active budget."
+    }
+  ],
+  "calendar": {
+    "available_slots": [
+      "Tuesday 14:00 IST",
+      "Wednesday 16:00 IST",
+      "Thursday 11:30 IST"
+    ]
+  },
+  "notification_targets": {
+    "slack_channel": "#founder-alerts",
+    "email": "founder@sprintops.ai"
+  }
+}

@@ -1,0 +1,19 @@
+name: send-notification
+description: Send escalation notifications to a human operator/founder.
+input_schema:
+  type: object
+  properties:
+    type:
+      type: string
+    priority:
+      type: string
+    context:
+      type: object
+  required:
+    - type
+    - priority
+output_schema:
+  type: object
+  properties:
+    sent:
+      type: boolean

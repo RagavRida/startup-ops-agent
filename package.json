@@ -6,7 +6,11 @@
   "main": "demo-all-skills.js",
   "scripts": {
     "demo": "node demo-all-skills.js",
-    "demo:real": "OPENROUTER_API_KEY=${OPENROUTER_API_KEY} node real-use-case.js",
+    "demo:real": "node real-use-case.js",
+    "demo:startup": "node demo-startup-realtime.js",
+    "live": "node live-chat.js",
+    "serve": "node server.js",
+    "serve:mcp": "node mcp-server.js",
     "demo:self-correct": "node self-correct-demo.js",
     "test": "node test.js",
     "quick": "node simple-test.js"
@@ -25,9 +29,12 @@
   "author": "Raghav Rida",
   "license": "MIT",
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "axios": "^1.14.0",
     "dotenv": "^17.3.1",
-    "gitclaw": "^0.3.0"
+    "gitclaw": "^0.3.0",
+    "googleapis": "^171.4.0",
+    "zod": "^4.3.6"
   },
   "engines": {
     "node": ">=18.0.0"

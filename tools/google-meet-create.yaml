@@ -1,0 +1,35 @@
+name: google-meet-create
+description: Create a Google Calendar event with a Google Meet link.
+input_schema:
+  type: object
+  properties:
+    summary:
+      type: string
+    description:
+      type: string
+    start_time:
+      type: string
+      description: ISO timestamp, e.g. 2026-04-08T09:30:00+05:30
+    end_time:
+      type: string
+      description: ISO timestamp, e.g. 2026-04-08T10:00:00+05:30
+    timezone:
+      type: string
+    attendees:
+      type: array
+      items:
+        type: string
+        description: attendee email
+  required:
+    - summary
+    - start_time
+    - end_time
+output_schema:
+  type: object
+  properties:
+    created:
+      type: boolean
+    meet_link:
+      type: string
+    event_id:
+      type: string

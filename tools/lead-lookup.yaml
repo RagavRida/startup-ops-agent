@@ -1,0 +1,14 @@
+name: lead-lookup
+description: Retrieve prior interaction context for a known lead.
+input_schema:
+  type: object
+  properties:
+    query:
+      type: string
+  required:
+    - query
+output_schema:
+  type: object
+  properties:
+    existing_lead:
+      type: object

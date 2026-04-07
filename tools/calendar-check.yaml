@@ -1,0 +1,19 @@
+name: calendar-check
+description: Check available meeting slots for the founder calendar.
+input_schema:
+  type: object
+  properties:
+    timezone:
+      type: string
+    preferred_times:
+      type: array
+      items:
+        type: string
+  required: []
+output_schema:
+  type: object
+  properties:
+    available_slots:
+      type: array
+      items:
+        type: string
