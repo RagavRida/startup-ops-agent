@@ -369,6 +369,57 @@ export async function runTool(name, args = {}) {
   }
 }
 
+export function getToolConnectionStatus() {
+  const isReal = TOOL_MODE === "real";
+  const googleAuthConfigured = Boolean(
+    GOOGLE_SERVICE_ACCOUNT_EMAIL && GOOGLE_PRIVATE_KEY
+  );
+
+  const leadLookupConnected = isReal
+    ? Boolean(LEAD_LOOKUP_API_URL || (googleAuthConfigured && GOOGLE_SHEETS_SPREADSHEET_ID))
+    : true;
+
+  const calendarConnected = isReal
+    ? Boolean(CALENDAR_API_URL || googleAuthConfigured)
+    : true;
+
+  const notificationConnected = isReal
+    ? Boolean(NOTIFICATION_API_URL || SLACK_WEBHOOK_URL)
+    : true;
+
+  const meetConnected = isReal ? Boolean(googleAuthConfigured) : true;
+
+  return {
+    mode: TOOL_MODE,
+    tools: {
+      "lead-lookup": {
+        connected: leadLookupConnected,
+        message: leadLookupConnected
+          ? "Ready"
+          : "Set LEAD_LOOKUP_API_URL or Google Sheets env vars."
+      },
+      "calendar-check": {
+        connected: calendarConnected,
+        message: calendarConnected
+          ? "Ready"
+          : "Set CALENDAR_API_URL or Google Calendar service account env vars."
+      },
+      "send-notification": {
+        connected: notificationConnected,
+        message: notificationConnected
+          ? "Ready"
+          : "Set NOTIFICATION_API_URL or SLACK_WEBHOOK_URL."
+      },
+      "google-meet-create": {
+        connected: meetConnected,
+        message: meetConnected
+          ? "Ready (Meet link availability depends on calendar policy)"
+          : "Set Google service account env vars for Calendar."
+      }
+    }
+  };
+}
+
 export function getCompanyContext() {
   if (TOOL_MODE === "real") {
     return {

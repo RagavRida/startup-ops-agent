@@ -57,6 +57,21 @@ steps:
       Confirm date, time, timezone, and calendar link before closing.
     outputs: [meeting_request]
 
+  - id: create-google-meet
+    action: "Create a Google Calendar event with a Meet link when booking details are available."
+    tool: google-meet-create
+    depends_on: [book]
+    trigger_when: ${{ steps.book.outputs.meeting_request != null }}
+    inputs:
+      summary: "SprintOps Discovery Call"
+      description: "Auto-created by Aria from meeting-book flow"
+      start_time: ${{ meeting_start_iso || '' }}
+      end_time: ${{ meeting_end_iso || '' }}
+      timezone: ${{ meeting_timezone || 'UTC' }}
+      attendees:
+        - ${{ meeting_attendee_email || '' }}
+    outputs: [meet_event]
+
   - id: onboard
     action: "If the visitor is a new signup (not a raw lead), run the onboarding flow."
     skill: user-onboard
