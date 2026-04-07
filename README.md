@@ -4,6 +4,27 @@ A production-style, git-native AI agent for startup revenue operations.
 
 Aria qualifies inbound leads, handles objections, guides onboarding, and drives meeting conversion using composable `gitagent` skills and real tools.
 
+## Who should use this
+
+Best-fit users:
+
+- startup founders and founding GTM teams
+- SDR/AE reps managing high inbound volume
+- RevOps or sales ops at early-stage companies
+- customer success teams handling onboarding + handoff
+
+Ideal company profile:
+
+- team size: 5-50
+- inbound leads: 20-200/week
+- no dedicated ops automation owner yet
+
+Not a fit when:
+
+- you need a fully custom enterprise CRM migration on day one
+- your workflow is mostly outbound-only and manual by design
+- strict internal policy blocks service-account or webhook integrations
+
 ## Why this project
 
 Early-stage teams often run sales, onboarding, and support manually. Aria acts as a focused AI operator that:

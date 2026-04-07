@@ -3,27 +3,145 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aria - Startup Ops Agent</title>
+    <title>Aria — Startup Ops Agent</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <div class="layout">
-      <aside class="panel">
-        <h1>Aria</h1>
-        <p class="subtitle">Startup Ops Agent (MCP-ready)</p>
-        <button id="refreshTools">Refresh Tool Status</button>
-        <div id="toolStatus" class="tool-status"></div>
-      </aside>
+    <div class="aria">
+      <header class="header">
+        <div class="logo">
+          <div class="logo-dot">
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M10 2a8 8 0 100 16A8 8 0 0010 2zm1 11H9V9h2v4zm0-6H9V5h2v2z" />
+            </svg>
+          </div>
+          <div class="logo-text">
+            <div class="title">Aria</div>
+            <div class="tag">Startup Ops Agent · GitAgent</div>
+          </div>
+        </div>
+        <div class="badges">
+          <span class="badge mcp">MCP ready</span>
+          <span class="badge live">● Live</span>
+        </div>
+      </header>
 
-      <main class="chat">
-        <div id="messages" class="messages"></div>
-        <form id="chatForm" class="composer">
-          <input id="messageInput" type="text" placeholder="Ask Aria to qualify, book, escalate, or create a meet..." />
-          <button type="submit">Send</button>
-        </form>
-      </main>
+      <nav class="nav">
+        <button class="nav-tab active" data-tab="overview">Overview</button>
+        <button class="nav-tab" data-tab="skills">Skills</button>
+        <button class="nav-tab" data-tab="connectors">Connectors</button>
+        <button class="nav-tab" data-tab="chat">Live chat</button>
+        <button class="nav-tab" data-tab="workflows">Workflows</button>
+      </nav>
+
+      <div class="container">
+        <section class="tab visible" id="tab-overview">
+          <div class="gitagent-badge">
+            <span class="gitagent-pill">gitagent</span>
+            <span class="gitagent-text">Valid · GitAgent SPEC · gitclaw / clawless runtime</span>
+            <span
+              class="gitagent-link"
+              onclick="sendPrompt('Show me the Aria gitagent SPECIFICATION.md details for hackathon judges')"
+              role="button"
+              tabindex="0"
+            >View spec ↗</span>
+          </div>
+
+          <div class="card" style="margin-bottom:14px;">
+            <div class="section-label" style="margin-top:0;">Who should use Aria</div>
+            <div class="muted-small">
+              Best for founders, SDR/AE teams, and RevOps at startups with high inbound lead volume and limited ops bandwidth.
+            </div>
+            <div class="muted-small" style="margin-top:8px;">
+              Ideal profile: 5-50 person SaaS teams handling 20-200 inbound leads/week.
+            </div>
+            <div class="muted-small" style="margin-top:8px;">
+              Not a fit for enterprise-only, heavy custom CRM migration projects on day one.
+            </div>
+          </div>
+
+          <div class="section-label">This session</div>
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-label">Leads qualified</div>
+              <div class="stat-value" id="stat-leads">0</div>
+              <div class="stat-delta">—</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Meetings booked</div>
+              <div class="stat-value" id="stat-meetings">0</div>
+              <div class="stat-delta">—</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Objections handled</div>
+              <div class="stat-value" id="stat-objections">0</div>
+              <div class="stat-delta">—</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Escalations</div>
+              <div class="stat-value" id="stat-escalations">0</div>
+              <div class="stat-delta" style="color:var(--amber)">→ Slack</div>
+            </div>
+          </div>
+
+          <div class="section-label">Active skills</div>
+          <div class="skills-grid" id="overview-skills"></div>
+
+          <div class="cta-row">
+            <button class="cta primary" data-go="chat">Start live chat ↗</button>
+            <button class="cta" data-prompt="Show me the agent.yaml definition for Aria startup ops agent.">View agent.yaml ↗</button>
+            <button class="cta" data-prompt="How do I run npm run demo:startup for Aria? Give exact commands.">Quick start ↗</button>
+          </div>
+        </section>
+
+        <section class="tab" id="tab-skills">
+          <div class="section-label">Composable skills</div>
+          <div class="cards-col" id="skills-cards"></div>
+        </section>
+
+        <section class="tab" id="tab-connectors">
+          <div class="section-label">Aria integrations · TOOL_MODE=real</div>
+          <div class="connectors-row" id="aria-connectors"></div>
+
+          <div class="section-label" style="margin-top:18px;">Claude connectors (built-in)</div>
+          <div class="connectors-row" id="claude-connectors"></div>
+          <div class="muted-small">
+            Aria's connectors are service-account integrations configured in <code>.env</code>. Claude connectors are shown as placeholders for hackathon context.
+          </div>
+        </section>
+
+        <section class="tab" id="tab-chat">
+          <div class="section-label">Live session</div>
+          <div class="chat-box">
+            <div class="chat-header">
+              <div>
+                <div class="chat-title">Aria · Startup Ops</div>
+                <div class="chat-subtitle" id="chat-subtitle">Skills: lead-qualify · objection-handle · meeting-book</div>
+              </div>
+              <span class="status-pill">● Live</span>
+            </div>
+            <div class="chat-messages" id="chat-msgs"></div>
+            <div class="chat-input-row">
+              <input
+                type="text"
+                id="chat-input"
+                placeholder="Ask Aria to qualify, handle objections, book meetings, or create Google Meet…"
+                autocomplete="off"
+              />
+              <button class="send-btn" id="chat-send">Send</button>
+            </div>
+          </div>
+
+          <div class="chip-row" id="quick-chips"></div>
+        </section>
+
+        <section class="tab" id="tab-workflows">
+          <div class="section-label">Recent workflow executions</div>
+          <div class="workflow-feed" id="workflow-feed"></div>
+        </section>
+      </div>
     </div>
 
     <script src="/app.js"></script>
   </body>
-  </html>
+</html>
