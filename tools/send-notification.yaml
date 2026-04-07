@@ -1,0 +1,74 @@
+name: send-notification
+description: Send escalation alerts and notifications to the founder. Supports multiple channels (email, Slack, webhook) with priority levels and full conversation context.
+version: 1.0.0
+input_schema:
+  type: object
+  properties:
+    type:
+      type: string
+      enum: [escalation, meeting_request, enterprise_lead, frustration_alert, compliance_flag]
+      description: Notification type — determines routing priority
+    priority:
+      type: string
+      enum: [low, medium, high, critical]
+      default: medium
+      description: Notification priority level
+    channel:
+      type: string
+      enum: [email, slack, webhook, all]
+      default: all
+      description: Delivery channel
+    recipient:
+      type: string
+      default: founder
+      description: Notification recipient role
+    subject:
+      type: string
+      description: Brief subject line for the notification
+    context:
+      type: object
+      description: Full context for the founder
+      properties:
+        visitor_name:
+          type: string
+        company:
+          type: string
+        conversation_summary:
+          type: string
+        trigger_reason:
+          type: string
+        fit_score:
+          type: string
+          enum: [strong, medium, weak, enterprise]
+        recommended_action:
+          type: string
+        conversation_id:
+          type: string
+          format: uuid
+      required: [trigger_reason, recommended_action]
+  required: [type, context]
+output_schema:
+  type: object
+  properties:
+    sent:
+      type: boolean
+    notification_id:
+      type: string
+      format: uuid
+    channels_delivered:
+      type: array
+      items:
+        type: string
+    timestamp:
+      type: string
+      format: date-time
+implementation:
+  type: webhook
+  url: "${NOTIFICATION_WEBHOOK_URL}"
+  timeout: 10
+annotations:
+  requires_confirmation: false
+  read_only: false
+  cost: low
+  used_by_skill: objection-handle
+  sod_role: operator

@@ -81,7 +81,7 @@ Found a bug or edge case? Open an issue with:
 
 ```bash
 # Fork and clone
-git clone https://github.com/yourusername/startup-ops-agent
+git clone https://github.com/RagavRida/startup-ops-agent
 cd startup-ops-agent
 
 # Install dependencies

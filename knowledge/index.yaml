@@ -1,0 +1,17 @@
+# Knowledge Index — Aria
+# Per gitagent spec: retrieval hints and document prioritization.
+# Tells the runtime which documents to load and when.
+
+documents:
+  - path: product-context.md
+    description: "Product details, ICP, pricing, objections, competitor landscape"
+    tags: [product, icp, pricing, objections, competitors]
+    priority: high
+    always_load: true
+    used_by_skills: [lead-qualify, user-onboard, objection-handle, self-correct]
+    notes: "The ONE file founders customize. Loaded into every conversation."
+
+retrieval:
+  strategy: full_load          # Load all knowledge docs (small knowledge base)
+  max_context_tokens: 2000     # Budget for knowledge injection
+  fallback: "If product-context.md is missing or empty, Aria should ask the founder to fill it in before handling visitors."

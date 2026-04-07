@@ -60,7 +60,7 @@ async function testOpenRouter() {
         headers: {
           'Authorization': `Bearer ${API_KEY}`,
           'Content-Type': 'application/json',
-          'HTTP-Referer': 'https://github.com/yourusername/startup-ops-agent',
+          'HTTP-Referer': 'https://github.com/RagavRida/startup-ops-agent',
           'X-Title': 'Aria - Startup Ops Agent'
         }
       }

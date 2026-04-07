@@ -1,6 +1,11 @@
 name: full-ops-cycle
 description: "End-to-end startup ops workflow — from first visitor message to confirmed meeting or graceful exit."
-version: 1.0.0
+version: 1.1.0
+
+triggers:
+  - visitor_message              # New visitor interaction
+  - new_signup                   # User signup event
+  - returning_visitor            # Recognized returning visitor
 
 inputs:
   - name: visitor_message
@@ -14,9 +19,22 @@ inputs:
     description: Optional metadata (referral source, page they came from, known email)
 
 steps:
+  - id: lookup
+    action: "Check if this visitor has prior interactions."
+    tool: lead-lookup
+    inputs:
+      query: ${{ visitor_context.email || visitor_context.name || 'unknown' }}
+    outputs: [existing_lead]
+
   - id: qualify
     action: "Qualify the lead using BANT-lite signals. Detect intent, role, and urgency."
     skill: lead-qualify
+    depends_on: [lookup]
+    prompt: |
+      If this is a returning visitor, use their history from the lookup step
+      to personalize the conversation. Don't re-ask questions they've answered.
+    inputs:
+      prior_data: ${{ steps.lookup.outputs.existing_lead }}
     outputs: [fit_score, use_case, next_action]
 
   - id: route
@@ -26,27 +44,63 @@ steps:
       strong: meeting-book
       medium: self-serve-or-soft-cta
       weak: graceful-exit
+      enterprise: escalate
 
   - id: book
     action: "Book a discovery call or demo with the qualified lead."
     skill: meeting-book
     depends_on: [qualify]
     trigger_when: ${{ steps.qualify.outputs.fit_score == 'strong' }}
+    tool: calendar-check
+    prompt: |
+      Use the calendar-check tool to find available slots.
+      Confirm date, time, timezone, and calendar link before closing.
     outputs: [meeting_request]
 
   - id: onboard
     action: "If the visitor is a new signup (not a raw lead), run the onboarding flow."
     skill: user-onboard
     trigger_when: ${{ visitor_context.is_new_signup == true }}
+    prompt: |
+      Guide the user to their activation milestone:
+      clone repo → fill product-context.md → validate → run test conversation.
     outputs: [activation_status]
 
   - id: handle-objection
     action: "If an objection is detected at any point in the conversation, handle it."
     skill: objection-handle
     trigger_when: ${{ objection_detected == true }}
+    prompt: |
+      Always acknowledge the concern before offering a reframe.
+      Never skip straight to the pitch. Respect two-no boundary.
     outputs: [objection_resolved, escalate_to_human]
+
+  - id: self-correct
+    action: "Validate every response through the 4-gate quality pipeline."
+    skill: self-correct
+    depends_on: [qualify, book, onboard, handle-objection]
+    prompt: |
+      Run all 4 gates: rule compliance, tone alignment, 
+      hallucination guard, escalation check.
+      If any gate fails, regenerate and re-validate.
+    outputs: [validated_response, corrections_applied]
 
   - id: escalate
     action: "Notify the human founder with lead details and context."
+    tool: send-notification
     trigger_when: ${{ steps.handle-objection.outputs.escalate_to_human == true OR steps.qualify.outputs.fit_score == 'enterprise' }}
+    inputs:
+      type: escalation
+      priority: high
+      context:
+        trigger_reason: ${{ escalation_reason }}
+        recommended_action: ${{ recommended_action }}
     outputs: [escalation_record]
+
+error_handling:
+  on_failure: graceful_fallback
+  fallback_message: "I appreciate your patience — let me connect you with the founder directly. They'll follow up within a few hours."
+  notify:
+    tool: send-notification
+    type: escalation
+    priority: critical

@@ -1,7 +1,7 @@
 spec_version: "0.1.0"
 name: startup-ops-agent
-version: 1.0.0
-description: "An AI employee that qualifies leads, onboards users, handles objections, and books meetings — autonomously."
+version: 1.1.0
+description: "An AI employee that qualifies leads, onboards users, handles objections, and books meetings — autonomously, with built-in self-correction."
 author: Raghav Rida
 license: MIT
 
@@ -19,6 +19,58 @@ skills:
   - user-onboard
   - meeting-book
   - objection-handle
+  - self-correct
+
+tools:
+  - calendar-check
+  - lead-lookup
+  - send-notification
+
+agents:
+  fact-checker:
+    source: agents/fact-checker.md
+    delegation: auto
+
+delegation:
+  mode: auto
+  router: self-correct
+
+runtime:
+  max_turns: 50
+  timeout: 120
+
+hooks:
+  bootstrap: hooks/bootstrap.md
+  teardown: hooks/teardown.md
+
+memory:
+  runtime: memory/runtime/
+  persistence: cross-session
+
+compliance:
+  risk_tier: medium
+  supervision:
+    human_in_the_loop: on_escalation
+    kill_switch: true
+  recordkeeping:
+    audit_logging: true
+    retention_period: 1y
+    immutable: true
+  segregation_of_duties:
+    roles:
+      - id: operator
+        description: "Aria — qualifies leads, handles objections, coordinates meetings"
+        permissions: [classify, respond, route, log, escalate]
+      - id: approver
+        description: "Founder — confirms meetings, handles enterprise, approves pricing"
+        permissions: [approve, override, commit, configure, deploy]
+      - id: auditor
+        description: "System — logs decisions, tracks compliance, flags violations"
+        permissions: [audit, validate, alert, report]
+    conflicts:
+      - [operator, approver]
+      - [operator, auditor]
+    enforcement: strict
 
 tags:
   - startup
@@ -27,3 +79,5 @@ tags:
   - lead-qualification
   - ops
   - automation
+  - self-correction
+  - compliance

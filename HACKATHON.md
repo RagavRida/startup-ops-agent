@@ -79,7 +79,7 @@ startup-ops-agent/
 
 ```bash
 # Clone and install
-git clone https://github.com/yourusername/startup-ops-agent
+git clone https://github.com/RagavRida/startup-ops-agent
 cd startup-ops-agent
 npm install
 
@@ -128,7 +128,7 @@ Built by Raghav Rida for the gitagent hackathon.
 
 ## Links
 
-- GitHub: [yourusername/startup-ops-agent]
+- GitHub: [RagavRida/startup-ops-agent](https://github.com/RagavRida/startup-ops-agent)
 - Demo Video: [TBD]
 - Live Demo: [TBD]
 

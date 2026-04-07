@@ -109,7 +109,7 @@ Use this for the submission form:
 
 **Project Name:** Aria - Startup Ops Agent
 
-**GitHub URL:** https://github.com/yourusername/startup-ops-agent
+**GitHub URL:** https://github.com/RagavRida/startup-ops-agent
 
 **Demo Video:** [Your YouTube/Loom URL]
 

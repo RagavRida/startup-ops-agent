@@ -1,12 +1,13 @@
 {
   "name": "startup-ops-agent",
-  "version": "1.0.0",
-  "description": "An AI employee for early-stage startups - qualifies leads, onboards users, handles objections, and books meetings",
+  "version": "1.1.0",
+  "description": "An AI employee for early-stage startups — qualifies leads, onboards users, handles objections, books meetings, with built-in self-correction",
   "type": "module",
-  "main": "demo.js",
+  "main": "demo-all-skills.js",
   "scripts": {
     "demo": "node demo-all-skills.js",
     "demo:real": "OPENROUTER_API_KEY=${OPENROUTER_API_KEY} node real-use-case.js",
+    "demo:self-correct": "node self-correct-demo.js",
     "test": "node test.js",
     "quick": "node simple-test.js"
   },
@@ -17,7 +18,9 @@
     "startup",
     "sales",
     "onboarding",
-    "lead-qualification"
+    "lead-qualification",
+    "self-correction",
+    "compliance"
   ],
   "author": "Raghav Rida",
   "license": "MIT",
@@ -31,6 +34,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/startup-ops-agent.git"
+    "url": "https://github.com/RagavRida/startup-ops-agent.git"
   }
 }

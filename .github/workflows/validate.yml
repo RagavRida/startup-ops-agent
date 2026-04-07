@@ -1,0 +1,91 @@
+name: Validate Agent
+
+on:
+  push:
+    branches: [main, dev, staging]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Validate Aria Agent
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate agent structure
+        run: npm run test
+
+      - name: Validate required files exist
+        run: |
+          echo "🔍 Checking required files..."
+          files=("agent.yaml" "SOUL.md" "RULES.md" "DUTIES.md" "AGENTS.md" "ARCHITECTURE.md")
+          for file in "${files[@]}"; do
+            if [ -f "$file" ]; then
+              echo "  ✅ $file"
+            else
+              echo "  ❌ $file MISSING"
+              exit 1
+            fi
+          done
+
+      - name: Validate skills frontmatter
+        run: |
+          echo "🔍 Checking skill frontmatter..."
+          skills=("lead-qualify" "user-onboard" "meeting-book" "objection-handle" "self-correct")
+          for skill in "${skills[@]}"; do
+            if [ -f "skills/$skill/SKILL.md" ]; then
+              if head -1 "skills/$skill/SKILL.md" | grep -q "^---"; then
+                echo "  ✅ $skill has frontmatter"
+              else
+                echo "  ❌ $skill missing frontmatter"
+                exit 1
+              fi
+            else
+              echo "  ❌ skills/$skill/SKILL.md not found"
+              exit 1
+            fi
+          done
+
+      - name: Validate compliance artifacts
+        run: |
+          echo "🔍 Checking compliance..."
+          [ -f "compliance/audit-policy.md" ] && echo "  ✅ audit-policy.md" || echo "  ⚠️ audit-policy.md missing (optional)"
+          [ -f "DUTIES.md" ] && echo "  ✅ DUTIES.md (SOD policy)" || { echo "  ❌ DUTIES.md MISSING"; exit 1; }
+
+      - name: Run self-correction demo
+        run: node self-correct-demo.js
+
+      - name: Check for leaked secrets
+        run: |
+          echo "🔍 Checking for leaked secrets..."
+          if git log --all -p 2>/dev/null | grep -qE "sk-or-v1-[a-zA-Z0-9]+" 2>/dev/null; then
+            echo "  ❌ API key found in git history!"
+            exit 1
+          else
+            echo "  ✅ No secrets found"
+          fi
+
+      - name: Summary
+        run: |
+          echo ""
+          echo "════════════════════════════════════════"
+          echo "🎉 All validations passed!"
+          echo "════════════════════════════════════════"
+          echo ""
+          echo "Agent: Aria (startup-ops-agent)"
+          echo "Skills: 5 validated"
+          echo "Compliance: SOD policy present"
+          echo "Self-correction: Pipeline verified"
+          echo ""

@@ -1,0 +1,69 @@
+# Validation Schedule — Aria
+# Defines cadence for agent validation, quality checks, and supervisory reviews.
+# Per gitagent spec: compliance/validation-schedule.yaml
+
+schedule:
+  - type: agent_validation
+    description: "Full gitagent validate run — checks agent.yaml schema, file structure, SOD policy"
+    cadence: on_every_push
+    owner: ci-cd-pipeline
+    automated: true
+    command: "gitagent validate --compliance"
+    github_action: ".github/workflows/validate.yml"
+
+  - type: self_correction_review
+    description: "Review correction logs for patterns — are gates catching real issues?"
+    cadence: weekly
+    owner: founder
+    checklist:
+      - Review correction rate (target: <10%)
+      - Check false positive rate (target: <2%)
+      - Identify new tone patterns to add to Gate 2
+      - Update product-context.md if hallucination patterns emerge
+      - Review escalation accuracy (target: >95%)
+
+  - type: rules_audit
+    description: "Audit RULES.md and SOUL.md against actual agent behavior"
+    cadence: monthly
+    owner: founder
+    checklist:
+      - Run all 4 demo scenarios (self-correct-demo.js)
+      - Test edge cases with new visitor profiles
+      - Verify ICP criteria still match target market
+      - Check if any new objection types need handling
+      - Review and update product-context.md
+
+  - type: sod_compliance_check
+    description: "Verify segregation of duties is enforced — Aria cannot approve her own actions"
+    cadence: quarterly
+    owner: founder
+    checklist:
+      - Verify meeting bookings require founder confirmation
+      - Confirm audit logs are append-only
+      - Check that escalation triggers are not suppressed
+      - Review conflict matrix in DUTIES.md
+      - Run gitagent validate --compliance
+
+  - type: full_agent_review
+    description: "Comprehensive review of agent identity, rules, skills, and performance"
+    cadence: quarterly
+    owner: founder
+    checklist:
+      - Review SOUL.md — does Aria's voice still match the brand?
+      - Review RULES.md — are constraints appropriate?
+      - Review all 5 skills — are they effective?
+      - Analyze lead qualification accuracy
+      - Review correction and escalation metrics
+      - Update memory archives
+      - Check dependency versions (gitclaw, axios, dotenv)
+
+  - type: security_review
+    description: "Check for exposed secrets, dependency vulnerabilities, and data handling"
+    cadence: monthly
+    owner: founder
+    automated: true
+    checklist:
+      - Verify .env is in .gitignore
+      - Run npm audit for dependency vulnerabilities
+      - Check no PII in git history
+      - Verify API keys are not hard-coded

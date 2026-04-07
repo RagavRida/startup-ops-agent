@@ -1,0 +1,64 @@
+# Hooks Configuration — Aria
+# Per gitagent spec: lifecycle event handlers with structured bindings.
+
+hooks:
+  on_session_start:
+    - script: bootstrap.md
+      description: "Load product context, verify configuration, initialize memory state"
+      actions:
+        - "Load knowledge/product-context.md into context"
+        - "Load memory/MEMORY.md for active lead state"
+        - "Load memory/runtime/context.md for session continuity"
+        - "Verify RULES.md constraints are loaded"
+        - "Verify SOUL.md identity is loaded"
+        - "Check for pending escalations"
+
+  pre_response:
+    - script: self-correct-pipeline
+      description: "Run 4-gate quality pipeline on every response before delivery"
+      skill: self-correct
+      gates:
+        - rule_compliance
+        - tone_alignment
+        - hallucination_guard
+        - escalation_check
+      on_fail: regenerate
+      compliance: true
+
+  post_response:
+    - script: audit-log
+      description: "Log interaction details to memory and audit trail"
+      actions:
+        - "Append interaction to memory/runtime/dailylog.md"
+        - "Update memory/MEMORY.md with lead state changes"
+        - "Log correction records if any gates triggered"
+      compliance: true
+
+  on_escalation:
+    - script: escalation-handler
+      description: "Notify founder and log escalation with full context"
+      tool: send-notification
+      actions:
+        - "Package conversation context"
+        - "Send notification via configured channel"
+        - "Log escalation to audit trail"
+        - "Update lead status to 'escalated'"
+      compliance: true
+
+  on_session_end:
+    - script: teardown.md
+      description: "Flush working memory, archive session data, log metrics"
+      actions:
+        - "Update memory/MEMORY.md with session summary"
+        - "Append final metrics to memory/runtime/dailylog.md"
+        - "Archive if working memory exceeds 200 lines"
+        - "Clear transient session state"
+
+  on_error:
+    - script: error-handler
+      description: "Log errors and escalate critical failures"
+      actions:
+        - "Log error details with stack trace"
+        - "If visitor-facing: deliver graceful fallback message"
+        - "If critical: trigger escalation to founder"
+        - "Record error in audit trail"

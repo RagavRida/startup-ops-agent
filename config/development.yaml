@@ -1,0 +1,23 @@
+# Development Configuration — Aria
+# Overrides for local development environment.
+
+runtime:
+  max_turns: 100
+  timeout: 300
+
+model:
+  provider: openrouter
+  name: anthropic/claude-3.5-sonnet    # Use cheaper model for dev
+  constraints:
+    temperature: 0.6                    # Higher temperature for testing variety
+    max_tokens: 2048                    # Extended output for debugging
+
+features:
+  self_correction: true
+  audit_logging: true
+  memory_persistence: false             # Don't persist memory in dev
+  verbose_logging: true                 # Extra logging for debugging
+
+logging:
+  level: debug
+  format: plaintext

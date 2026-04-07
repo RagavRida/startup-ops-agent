@@ -1,0 +1,85 @@
+# Regulatory Map — Aria
+# Maps agent capabilities to applicable regulatory controls.
+# Per gitagent spec: compliance/regulatory-map.yaml
+
+mappings:
+  - capability: visitor_communication
+    description: "All responses Aria sends to website visitors"
+    rules:
+      - id: fair-communication
+        name: Fair & Balanced Communication
+        source: "Inspired by FINRA Rule 2210"
+        controls:
+          - fair_balanced_check        # No exaggerated claims
+          - no_misleading_check        # No misleading statements
+          - no_outcome_promises        # Never promise ROI/results
+        enforced_by: "skills/self-correct (Gate 1: Rule Compliance)"
+
+      - id: response-quality
+        name: Response Quality Standards
+        source: "RULES.md output constraints"
+        controls:
+          - word_limit_80              # Under 80 words for qualification
+          - single_question_rule       # One question per message
+          - tone_alignment             # Matches SOUL.md voice
+        enforced_by: "skills/self-correct (Gates 1 & 2)"
+
+  - capability: lead_qualification
+    description: "Classifying visitors by ICP fit and routing to next action"
+    rules:
+      - id: data-accuracy
+        name: Data Accuracy & Integrity
+        source: "RULES.md must-never constraints"
+        controls:
+          - no_fabricated_features      # Hallucination guard
+          - no_invented_pricing         # Only verified pricing info
+          - icp_boundary_check          # Stay within defined ICP
+        enforced_by: "skills/self-correct (Gate 3: Hallucination Guard)"
+
+      - id: privacy-protection
+        name: Visitor Privacy
+        source: "RULES.md interaction boundaries"
+        controls:
+          - no_cross_user_data          # Never share other users' data
+          - no_sensitive_collection     # Never collect credit cards, SSN, passwords
+          - conversation_isolation      # Each visitor session is isolated
+        enforced_by: "RULES.md hard constraints"
+
+  - capability: meeting_booking
+    description: "Coordinating calendar slots between leads and founder"
+    rules:
+      - id: sod-approval
+        name: Segregation of Duties — Meeting Approval
+        source: "DUTIES.md handoff workflow"
+        controls:
+          - founder_confirmation_required  # Aria cannot confirm meetings alone
+          - meeting_details_verification   # Must confirm date, time, timezone, link
+          - pending_status_enforcement     # Bookings held in pending_confirmation
+        enforced_by: "DUTIES.md + agent.yaml SOD policy"
+
+  - capability: escalation_handling
+    description: "Routing high-stakes interactions to the human founder"
+    rules:
+      - id: escalation-triggers
+        name: Escalation Trigger Compliance
+        source: "RULES.md escalation triggers"
+        controls:
+          - enterprise_detection           # >$10k ACV → founder
+          - frustration_detection          # Anger/frustration → founder immediately
+          - compliance_question_routing    # Security/compliance → founder
+          - two_no_exit                    # Two "no" signals → graceful exit
+        enforced_by: "skills/self-correct (Gate 4: Escalation Check)"
+
+  - capability: audit_logging
+    description: "Recording all decisions, corrections, and interactions"
+    rules:
+      - id: recordkeeping
+        name: Audit Trail & Recordkeeping
+        source: "compliance/audit-policy.md"
+        controls:
+          - append_only_logs               # Logs cannot be modified
+          - git_commit_trail               # Every change is a git commit
+          - correction_logging             # All self-corrections recorded
+          - interaction_logging            # All visitor interactions recorded
+          - retention_1y                   # 1-year retention period
+        enforced_by: "System (Auditor role) + git history"

@@ -11,7 +11,7 @@ Get Aria running in 5 minutes.
 ## Step 1: Clone & Install
 
 ```bash
-git clone https://github.com/yourusername/startup-ops-agent
+git clone https://github.com/RagavRida/startup-ops-agent
 cd startup-ops-agent
 npm install
 ```
