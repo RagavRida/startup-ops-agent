@@ -1,9 +1,10 @@
 # Runtime state (gitagent)
 .gitagent/
 
-# Environment variables
+# Environment variables — NEVER commit secrets
 .env
 .env.local
+.env.production
 
 # Dependencies
 node_modules/
@@ -15,6 +16,24 @@ npm-debug.log*
 # OS files
 .DS_Store
 Thumbs.db
+._*
+
+# IDE / Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Demo recordings (large media — too big for Git)
+demo-recordings/
 
 # Test files (keep in repo but ignore output)
 test-output/
+
+# Gemini agent data
+.gemini/
+.agents/
+.agent/
+_agents/
+_agent/

@@ -130,9 +130,23 @@ async function callOpenRouter(messages) {
 }
 
 function safeJsonParse(text) {
+  if (!text) return null;
+  // Strip markdown code fences (```json ... ``` or ``` ... ```)
+  let cleaned = text.trim();
+  const fenceMatch = cleaned.match(/```(?:json)?\s*\n?([\s\S]*?)```/);
+  if (fenceMatch) cleaned = fenceMatch[1].trim();
   try {
-    return JSON.parse(text);
+    return JSON.parse(cleaned);
   } catch {
+    // Try extracting first JSON object from text
+    const objMatch = cleaned.match(/\{[\s\S]*\}/);
+    if (objMatch) {
+      try {
+        return JSON.parse(objMatch[0]);
+      } catch {
+        return null;
+      }
+    }
     return null;
   }
 }

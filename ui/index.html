@@ -1,147 +1,249 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aria — Startup Ops Agent</title>
-    <link rel="stylesheet" href="/styles.css" />
-  </head>
-  <body>
-    <div class="aria">
-      <header class="header">
-        <div class="logo">
-          <div class="logo-dot">
-            <svg viewBox="0 0 20 20" aria-hidden="true">
-              <path d="M10 2a8 8 0 100 16A8 8 0 0010 2zm1 11H9V9h2v4zm0-6H9V5h2v2z" />
-            </svg>
-          </div>
-          <div class="logo-text">
-            <div class="title">Aria</div>
-            <div class="tag">Startup Ops Agent · GitAgent</div>
-          </div>
-        </div>
-        <div class="badges">
-          <span class="badge mcp">MCP ready</span>
-          <span class="badge live">● Live</span>
-        </div>
-      </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aria — Startup Ops Agent</title>
+  <meta name="description" content="AI-powered startup operations agent: qualify leads, handle objections, book meetings, onboard users — autonomously." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%236366f1'/><text x='50%25' y='55%25' dominant-baseline='central' text-anchor='middle' fill='white' font-size='18' font-weight='bold' font-family='Inter,sans-serif'>A</text></svg>" />
+</head>
+<body>
+  <div id="app">
+    <!-- ═══════ SIDEBAR ═══════ -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">A</div>
+        <span class="brand-text">Aria</span>
+      </div>
 
-      <nav class="nav">
-        <button class="nav-tab active" data-tab="overview">Overview</button>
-        <button class="nav-tab" data-tab="skills">Skills</button>
-        <button class="nav-tab" data-tab="connectors">Connectors</button>
-        <button class="nav-tab" data-tab="chat">Live chat</button>
-        <button class="nav-tab" data-tab="workflows">Workflows</button>
+      <nav class="sidebar-nav">
+        <div class="nav-item active" data-screen="chat" id="nav-chat">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="nav-label">Chat</span>
+        </div>
+        <div class="nav-item" data-screen="leads" id="nav-leads">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span class="nav-label">Leads</span>
+        </div>
+        <div class="nav-item" data-screen="connectors" id="nav-connectors">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+          <span class="nav-label">Connectors</span>
+        </div>
+        <div class="nav-item" data-screen="workflow" id="nav-workflow">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <span class="nav-label">Workflow</span>
+        </div>
+        <div class="nav-item" data-screen="analytics" id="nav-analytics">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <span class="nav-label">Analytics</span>
+        </div>
+        <div class="nav-item" data-screen="settings" id="nav-settings">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span class="nav-label">Settings</span>
+        </div>
       </nav>
 
-      <div class="container">
-        <section class="tab visible" id="tab-overview">
-          <div class="gitagent-badge">
-            <span class="gitagent-pill">gitagent</span>
-            <span class="gitagent-text">Valid · GitAgent SPEC · gitclaw / clawless runtime</span>
-            <span
-              class="gitagent-link"
-              onclick="sendPrompt('Show me the Aria gitagent SPECIFICATION.md details for hackathon judges')"
-              role="button"
-              tabindex="0"
-            >View spec ↗</span>
-          </div>
-
-          <div class="card" style="margin-bottom:14px;">
-            <div class="section-label" style="margin-top:0;">Who should use Aria</div>
-            <div class="muted-small">
-              Best for founders, SDR/AE teams, and RevOps at startups with high inbound lead volume and limited ops bandwidth.
-            </div>
-            <div class="muted-small" style="margin-top:8px;">
-              Ideal profile: 5-50 person SaaS teams handling 20-200 inbound leads/week.
-            </div>
-            <div class="muted-small" style="margin-top:8px;">
-              Not a fit for enterprise-only, heavy custom CRM migration projects on day one.
-            </div>
-          </div>
-
-          <div class="section-label">This session</div>
-          <div class="stats-row">
-            <div class="stat-card">
-              <div class="stat-label">Leads qualified</div>
-              <div class="stat-value" id="stat-leads">0</div>
-              <div class="stat-delta">—</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Meetings booked</div>
-              <div class="stat-value" id="stat-meetings">0</div>
-              <div class="stat-delta">—</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Objections handled</div>
-              <div class="stat-value" id="stat-objections">0</div>
-              <div class="stat-delta">—</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Escalations</div>
-              <div class="stat-value" id="stat-escalations">0</div>
-              <div class="stat-delta" style="color:var(--amber)">→ Slack</div>
-            </div>
-          </div>
-
-          <div class="section-label">Active skills</div>
-          <div class="skills-grid" id="overview-skills"></div>
-
-          <div class="cta-row">
-            <button class="cta primary" data-go="chat">Start live chat ↗</button>
-            <button class="cta" data-prompt="Show me the agent.yaml definition for Aria startup ops agent.">View agent.yaml ↗</button>
-            <button class="cta" data-prompt="How do I run npm run demo:startup for Aria? Give exact commands.">Quick start ↗</button>
-          </div>
-        </section>
-
-        <section class="tab" id="tab-skills">
-          <div class="section-label">Composable skills</div>
-          <div class="cards-col" id="skills-cards"></div>
-        </section>
-
-        <section class="tab" id="tab-connectors">
-          <div class="section-label">Aria integrations · TOOL_MODE=real</div>
-          <div class="connectors-row" id="aria-connectors"></div>
-
-          <div class="section-label" style="margin-top:18px;">Claude connectors (built-in)</div>
-          <div class="connectors-row" id="claude-connectors"></div>
-          <div class="muted-small">
-            Aria's connectors are service-account integrations configured in <code>.env</code>. Claude connectors are shown as placeholders for hackathon context.
-          </div>
-        </section>
-
-        <section class="tab" id="tab-chat">
-          <div class="section-label">Live session</div>
-          <div class="chat-box">
-            <div class="chat-header">
-              <div>
-                <div class="chat-title">Aria · Startup Ops</div>
-                <div class="chat-subtitle" id="chat-subtitle">Skills: lead-qualify · objection-handle · meeting-book</div>
-              </div>
-              <span class="status-pill">● Live</span>
-            </div>
-            <div class="chat-messages" id="chat-msgs"></div>
-            <div class="chat-input-row">
-              <input
-                type="text"
-                id="chat-input"
-                placeholder="Ask Aria to qualify, handle objections, book meetings, or create Google Meet…"
-                autocomplete="off"
-              />
-              <button class="send-btn" id="chat-send">Send</button>
-            </div>
-          </div>
-
-          <div class="chip-row" id="quick-chips"></div>
-        </section>
-
-        <section class="tab" id="tab-workflows">
-          <div class="section-label">Recent workflow executions</div>
-          <div class="workflow-feed" id="workflow-feed"></div>
-        </section>
+      <div class="sidebar-footer">
+        <div class="tool-mode-badge real" id="mode-badge">
+          <span class="mode-dot"></span>
+          <span id="mode-label">Live</span>
+        </div>
       </div>
-    </div>
+    </aside>
 
-    <script src="/app.js"></script>
-  </body>
+    <!-- ═══════ MAIN CONTENT ═══════ -->
+    <div class="main-content">
+      <div class="top-bar">
+        <h1 class="top-bar-title" id="page-title">Chat</h1>
+        <div class="top-bar-actions">
+          <button class="top-bar-btn" id="btn-new-session" title="New session">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ CHAT SCREEN ══ -->
+      <div class="screen chat-screen active" id="screen-chat">
+        <div class="chat-main">
+          <div class="chat-messages" id="chat-messages">
+            <div class="chat-welcome" id="chat-welcome">
+              <div class="welcome-icon">A</div>
+              <h2 class="welcome-title">Hey, I'm Aria 👋</h2>
+              <p class="welcome-subtitle">I'm your AI ops employee. I qualify leads, handle objections, book meetings, and onboard users — all autonomously.</p>
+              <div class="welcome-chips">
+                <button class="welcome-chip" data-msg="We're a 25-person startup getting 80 inbound leads a week">🎯 Qualify a lead</button>
+                <button class="welcome-chip" data-msg="Can you check alex@sprintleaf.ai and suggest next step?">🔍 Lookup a contact</button>
+                <button class="welcome-chip" data-msg="We already use HubSpot, why would we need this?">🛡️ Handle objection</button>
+                <button class="welcome-chip" data-msg="Let's book a call for Tuesday afternoon IST">📅 Book a meeting</button>
+                <button class="welcome-chip" data-msg="We just signed up, what's the fastest way to get value?">🚀 Start onboarding</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-input-area">
+            <div class="quick-actions" id="quick-actions">
+              <button class="quick-action-btn" data-msg="Can you check alex@sprintleaf.ai?">🔍 Lookup Lead</button>
+              <button class="quick-action-btn" data-msg="What's the calendar availability this week?">📅 Check Calendar</button>
+              <button class="quick-action-btn" data-msg="Let's book a call for this week">📞 Book Meeting</button>
+              <button class="quick-action-btn" data-msg="This needs to be escalated to the founder">🚨 Escalate</button>
+            </div>
+            <div class="chat-input-row">
+              <input type="text" class="chat-input" id="chat-input" placeholder="Message Aria..." autocomplete="off" />
+              <button class="send-btn" id="send-btn" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Panel -->
+        <aside class="right-panel" id="right-panel">
+          <div class="panel-section">
+            <div class="panel-section-title">Lead Score</div>
+            <div class="score-badge unknown" id="panel-score">
+              <span>—</span> Waiting
+            </div>
+          </div>
+
+          <div class="panel-section">
+            <div class="panel-section-title">Active Skill</div>
+            <div class="skill-pill" id="panel-skill">⏳ idle</div>
+          </div>
+
+          <div class="panel-section">
+            <div class="panel-section-title">Next Action</div>
+            <div class="action-card">
+              <div class="action-value" id="panel-action">Awaiting conversation</div>
+            </div>
+          </div>
+
+          <div class="panel-section">
+            <div class="panel-section-title">Connected Tools</div>
+            <div class="tool-status-list" id="panel-tools">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <div class="panel-section" style="flex:1; overflow-y:auto;">
+            <div class="panel-section-title">Tool Call Timeline</div>
+            <div class="tool-timeline" id="panel-timeline">
+              <div style="font-size:12px; color:var(--text-tertiary);">No tool calls yet</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- ══ LEADS SCREEN ══ -->
+      <div class="screen leads-screen" id="screen-leads">
+        <div class="leads-scroll">
+          <div class="kpi-row" id="kpi-row">
+            <!-- Populated by JS -->
+          </div>
+          <div class="kanban" id="kanban">
+            <!-- Populated by JS -->
+          </div>
+          <div class="activity-section">
+            <div class="activity-section-title">Recent Activity</div>
+            <div class="activity-feed" id="activity-feed">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ CONNECTORS SCREEN ══ -->
+      <div class="screen connectors-screen" id="screen-connectors">
+        <div class="connectors-scroll">
+          <div class="connectors-grid" id="connectors-grid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ WORKFLOW SCREEN ══ -->
+      <div class="screen workflow-screen" id="screen-workflow">
+        <div class="workflow-scroll">
+          <div class="workflow-visualizer">
+            <div class="workflow-title">Full Ops Cycle</div>
+            <div class="workflow-desc">End-to-end startup ops workflow — from first visitor message to confirmed meeting or graceful exit.</div>
+            <div class="workflow-flow" id="workflow-flow">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ ANALYTICS SCREEN ══ -->
+      <div class="screen analytics-screen" id="screen-analytics">
+        <div class="analytics-scroll">
+          <div class="analytics-grid" id="analytics-grid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ SETTINGS SCREEN ══ -->
+      <div class="screen settings-screen" id="screen-settings">
+        <div class="settings-scroll">
+          <div class="settings-group">
+            <div class="settings-group-title">⚡ Runtime</div>
+            <div class="settings-row">
+              <div>
+                <div class="settings-label">Model</div>
+                <div class="settings-sublabel">LLM used for responses</div>
+              </div>
+              <select class="settings-select" id="setting-model" disabled>
+                <option>anthropic/claude-opus-4</option>
+                <option>anthropic/claude-sonnet-4</option>
+                <option>openai/gpt-4o</option>
+              </select>
+            </div>
+            <div class="settings-row">
+              <div>
+                <div class="settings-label">Integrations</div>
+                <div class="settings-sublabel">Google Workspace + Slack connected</div>
+              </div>
+              <div class="toggle-switch active" id="toggle-tool-mode" title="Integrations enabled">
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-group">
+            <div class="settings-group-title">🏢 Company Context</div>
+            <div class="settings-row">
+              <div>
+                <div class="settings-label">Company Name</div>
+              </div>
+              <input class="settings-input" id="setting-company" value="SprintOps" readonly />
+            </div>
+            <div class="settings-row">
+              <div>
+                <div class="settings-label">Founder</div>
+              </div>
+              <input class="settings-input" id="setting-founder" value="Raghav Rida" readonly />
+            </div>
+            <div class="settings-row">
+              <div>
+                <div class="settings-label">Timezone</div>
+              </div>
+              <input class="settings-input" id="setting-timezone" value="Asia/Kolkata" readonly />
+            </div>
+          </div>
+
+          <div class="settings-group">
+            <div class="settings-group-title">🧠 Agent Personality</div>
+            <div class="soul-preview" id="soul-preview">Loading SOUL.md...</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
 </html>
